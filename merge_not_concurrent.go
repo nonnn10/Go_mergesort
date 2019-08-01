@@ -14,15 +14,15 @@ import (
 )
 
 func main() {
-  lines := fromFile("../ransu_100.txt")
+  lines := fromFile("./random_data/ransu_100.txt")
   int_lines := stringToint(lines)
   //result := make([]int,0)
 
   start := time.Now()
-  MergeSort(int_lines)//ar := MergeSort(int_lines,result)
+  ar := MergeSort(int_lines)
   //fmt.Println(MergeSort(int_lines))
   end := time.Now()
-  //wrightfile(ar)
+  wrightfile(ar)
 fmt.Printf("%f秒\n",(end.Sub(start)).Seconds())
 }
 
@@ -82,6 +82,7 @@ func stringToint(t []string) []int {
 	 //fmt.Println(t2) 
 	return t2
 }
+
 func wrightfile(ar []int){
     fp, err := os.Create("result.txt")
     if err != nil {
@@ -90,7 +91,7 @@ func wrightfile(ar []int){
     }
     defer fp.Close()
 
-    fmt.Println(len(ar))
+    //fmt.Println(len(ar))
     var count3 int
     for _,v := range ar {
         fp.WriteString(strconv.Itoa(v)+"\n")

@@ -15,23 +15,23 @@ import (
 )
 
 func main() {
-  lines := fromFile("../ransu_100.txt")
-  int_lines := stringToint(lines)
-  result := make(chan []int)
+  lines := fromFile("./random_data/ransu_100.txt")  //file読み込みlinesに代入
+  int_lines := stringToint(lines)   //読み込んだstring型をint型に変換しint_linesに代入
+  result := make(chan []int)        //マージソートの結果を送受信するchannel型resultを作成
   
-  start := time.Now()
-   go MergeSort(int_lines, result)
-  end := time.Now()
-  r := <- result
+  start := time.Now()               //マージソートにかかる時間の計測開始
+   go MergeSort(int_lines, result)  //並列でマージソートの実行
+  end := time.Now()                 //時間の計測終了
+  r := <- result                    //resultを受信しrに代入
 
-  filewright(r)
-    close(result)
-fmt.Printf("%f秒\n",(end.Sub(start)).Seconds())
-log.Println(runtime.NumGoroutine())
+  filewright(r)                     //rに入ったソート後のデータを”result.txt”fileに書き込み
+    close(result)                   //channelのクローズ
+fmt.Printf("%f秒\n",(end.Sub(start)).Seconds())     //計測時間の標準出力
+log.Println(runtime.NumGoroutine())                 //なくても良い(goroutine数の確認)
 }
 
 
-
+//fileを一行ずつ読み込む関数
 func fromFile(filePath string) []string {
   // ファイルを開く
   f, err := os.Open(filePath)
@@ -57,8 +57,7 @@ func fromFile(filePath string) []string {
   return lines
 }
 
-//マージソート
-
+//マージを行う関数
 func Merge(ldata []int, rdata []int) (result []int) {
     result = make([]int, len(ldata) + len(rdata))
     lidx, ridx := 0, 0
@@ -84,26 +83,26 @@ func Merge(ldata []int, rdata []int) (result []int) {
 }
 
 
-
+//マージソートを行う関数
 func MergeSort(data []int, r chan []int){
-    if len(data) == 1 {
-        r <- data
+    if len(data) == 1 {                     //データが1個になったら分割終了
+        r <- data                           //データをrに送信
         return 
     }
     
-    leftChan := make(chan []int)
-    rightChan := make(chan []int)
-    middle := len(data)/2
+    leftChan := make(chan []int)            //left側のデータを送受信するchannelの作成
+    rightChan := make(chan []int)           //right側のデータを送受信するchannelの作成
+    middle := len(data)/2                   //データを２分割した数を変数に代入
     
-	go MergeSort(data[:middle], leftChan)
-    go MergeSort(data[middle:], rightChan)
+	go MergeSort(data[:middle], leftChan)   //left側のデータを並列にマージソート
+    go MergeSort(data[middle:], rightChan)  //right側のデータを並列にマージソート
    // log.Println(runtime.NumGoroutine())
-    ldata := <-leftChan
-    rdata := <-rightChan
+    ldata := <-leftChan                     //マージソートされたleft側のデータを受信しldata変数に代入
+    rdata := <-rightChan                    //マージソートされたright側のデータを受信しrdata変数に代入
 
-    close(leftChan)
-    close(rightChan)
-    r <- Merge(ldata, rdata)
+    close(leftChan)                         //channelのクローズ(クローズしなくても良いがリソースの解放)
+    close(rightChan)                        //channelのクローズ
+    r <- Merge(ldata, rdata)                //マージした結果をchannelに送信
 
     return 
 }
@@ -111,7 +110,7 @@ func MergeSort(data []int, r chan []int){
 
 
 
-//スライスの型変換(string>int)
+//スライスの型変換(string>int)する関数
 func stringToint(t []string) []int {
 	t2 := make([]int, 0) //= []int{}
 	for _, i := range t { 
@@ -125,6 +124,7 @@ func stringToint(t []string) []int {
 	return t2
 }
 
+//fileに書き込む関数
 func filewright(r []int){
     fp, err := os.Create("result.txt")
     if err != nil {

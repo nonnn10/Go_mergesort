@@ -19,7 +19,7 @@ import (
 
 func main() {
     //runtime.GOMAXPROCS(2)
-    lines := fromFile("../ransu_100.txt")
+    lines := fromFile("./random_data/ransu_100.txt")
     int_lines := stringToint(lines)
     start := time.Now()
        MergeSort(int_lines)
@@ -69,7 +69,7 @@ func Merge(ldata []int, rdata []int) (result []int) {
 func MergeSort(data []int) (r []int){
    //log.Println(runtime.NumGoroutine()) 
    //fmt.Printf("len<cap = %d<%d\n", len(ch), cap(ch))
-   if len(ch) < cap(ch)-2 {
+   if len(ch) < cap(ch)-2 {                           //chの容量以下なら並列化
         if len(data) == 1 {
             return data
         }
@@ -87,7 +87,7 @@ func MergeSort(data []int) (r []int){
         close(rightChan)
         r = Merge(l_data, r_data)
         return r
-} else {
+} else {                                             //chの容量以上なら並列化なし
     if len(data) == 1 {
         return data
     } 
