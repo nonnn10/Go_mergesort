@@ -3,7 +3,7 @@ mergesortの並列化
 Overview  
 Golangにおけるマージソートの並列化を行なったもの
 
-##Description
+##Description  
 merge.goファイルがマージソートの並列化を実践したもの  
 merge_limitファイルがマージソートにおける同時に実行できるgoroutine数を制限したもの  
 merge_not_concurrentファイルがマージソートを並列化していないもの  
