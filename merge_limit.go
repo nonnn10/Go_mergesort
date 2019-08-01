@@ -1,3 +1,9 @@
+/*
+このプログラムでは並列化におけるgoroutineの数を制限するようにしている
+結果は並列化していないマージソートよりも遅くなるという結果だった
+*/
+
+
 package main
 
 //https://gist.github.com/julianshen/3940045#file-merge-go-L9
