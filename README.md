@@ -44,3 +44,4 @@ merge_not_concurrentファイルがマージソートを並列化していない
 各プログラムの性能結果はエクセルファイルとしてmerge_resultファイルに入っている  
 
 ##175774B  
+  BucketSort.cppはバケットソートをC++で実装したもの．配列の要素数，最大値，バケツの数，スレッド数を入力することでソート処理が開始され，処理時間を計測する．OpenMPを用いて並列化を実装し，omp_set_num_threads()構文を用いてスレッド数の指定，#pragma omp parallel for 構文を用いてforループの並列化を行った．
